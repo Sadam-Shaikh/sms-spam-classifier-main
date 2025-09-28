@@ -8,15 +8,15 @@ services:
       python -c "import nltk; nltk.download('punkt', download_dir='nltk_data'); nltk.download('stopwords', download_dir='nltk_data')"
     startCommand: python app_flask.py
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.0
-      - key: FLASK_ENV
-        value: production
-      - key: FLASK_APP
-        value: app_flask.py
-      - key: PORT
-        value: 10000
-      - key: HOST
-        value: 0.0.0.0
-      - key: NLTK_DATA
-        value: /opt/render/.cache/nltk_data
+      
+        PYTHON_VERSION: 3.9.0
+      
+        FLASK_ENV: production
+      
+        FLASK_APP: app_flask.py
+      
+        PORT: 10000
+      
+        HOST: 0.0.0.0
+      
+        NLTK_DATA: /opt/render/.cache/nltk_data
