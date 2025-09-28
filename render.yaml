@@ -5,7 +5,9 @@ services:
     buildCommand: |
       pip install --upgrade pip
       pip install -r requirements.txt
-      python -c "import nltk; nltk.download('punkt', download_dir='nltk_data'); nltk.download('stopwords', download_dir='nltk_data')"
+      mkdir -p nltk_data
+      python -c "import nltk; nltk.download('punkt', download_dir='nltk_data')"
+      python -c "import nltk; nltk.download('stopwords', download_dir='nltk_data')"
     startCommand: python app_flask.py
     envVars:
       
