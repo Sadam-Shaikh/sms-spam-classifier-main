@@ -3,8 +3,9 @@ services:
     name: sms-spam-classifier
     env: python
     buildCommand: |
+      pip install --upgrade pip
       pip install -r requirements.txt
-      python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
+      python -c "import nltk; nltk.download('punkt', download_dir='nltk_data'); nltk.download('stopwords', download_dir='nltk_data')"
     startCommand: python app_flask.py
     envVars:
       - key: PYTHON_VERSION
