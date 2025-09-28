@@ -1,9 +1,11 @@
 import streamlit as st
 import pickle
 import nltk
+import os
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import string
+import sys
 
 # Set page config
 st.set_page_config(
@@ -12,16 +14,21 @@ st.set_page_config(
     layout="wide"
 )
 
+# Set NLTK data path
+nltk_data_path = os.path.join(os.path.expanduser('~'), 'nltk_data')
+os.makedirs(nltk_data_path, exist_ok=True)
+nltk.data.path.append(nltk_data_path)
+
 # Download NLTK data
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt')
+    nltk.download('punkt', download_dir=nltk_data_path)
 
 try:
     nltk.data.find('corpora/stopwords')
 except LookupError:
-    nltk.download('stopwords')
+    nltk.download('stopwords', download_dir=nltk_data_path)
 
 # Text preprocessing function
 def transform_text(text):
@@ -40,11 +47,15 @@ def transform_text(text):
 # Load the model and vectorizer
 @st.cache_resource
 def load_model():
-    with open('vectorizer.pkl', 'rb') as f:
-        tfidf = pickle.load(f)
-    with open('model.pkl', 'rb') as f:
-        model = pickle.load(f)
-    return tfidf, model
+    try:
+        with open('vectorizer.pkl', 'rb') as f:
+            tfidf = pickle.load(f)
+        with open('model.pkl', 'rb') as f:
+            model = pickle.load(f)
+        return tfidf, model
+    except Exception as e:
+        st.error(f"Error loading model files: {str(e)}")
+        st.stop()
 
 tfidf, model = load_model()
 
