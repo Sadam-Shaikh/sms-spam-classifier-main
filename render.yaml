@@ -4,7 +4,7 @@ services:
     env: python
     buildCommand: |
       pip install -r requirements.txt
-      python -m nltk.downloader punkt stopwords
+      python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
     startCommand: python app_flask.py
     envVars:
       - key: PYTHON_VERSION
