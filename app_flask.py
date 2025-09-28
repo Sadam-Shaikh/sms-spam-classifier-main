@@ -1,5 +1,10 @@
 import os
+from dotenv import load_dotenv
 import nltk
+
+# Load environment variables
+load_dotenv()
+
 # Set NLTK data path
 nltk_data_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
 os.makedirs(nltk_data_path, exist_ok=True)
@@ -55,6 +60,11 @@ class TextPreprocessor:
         return ' '.join(words)
 
 app = Flask(__name__)
+
+# Load configuration from environment variables
+app.config['ENV'] = os.getenv('FLASK_ENV', 'production')
+app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'False').lower() in ('true', '1', 't')
+port = int(os.getenv('PORT', 10000))
 
 # Initialize the preprocessor
 preprocessor = TextPreprocessor()
@@ -252,10 +262,5 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    # Download required NLTK data
-    import nltk
-    nltk.download('punkt')
-    nltk.download('stopwords')
-    
-    # Run the Flask app
-    app.run(debug=True, port=5000)
+    # Start the Flask application
+    app.run(host=os.getenv('HOST', '0.0.0.0'), port=port, debug=app.config['DEBUG'])

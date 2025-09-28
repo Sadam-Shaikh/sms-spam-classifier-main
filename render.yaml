@@ -10,7 +10,13 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: app_flask.py
       - key: PORT
         value: 10000
+      - key: HOST
+        value: 0.0.0.0
       - key: NLTK_DATA
         value: /opt/render/.cache/nltk_data
