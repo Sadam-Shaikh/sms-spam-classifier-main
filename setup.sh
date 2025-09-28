@@ -3,6 +3,9 @@
 # Exit on error
 set -e
 
+# Set Python version
+export PYTHON_VERSION=3.9
+
 # Create necessary directories
 mkdir -p ~/.streamlit
 NLTK_DATA=/tmp/nltk_data
@@ -11,9 +14,25 @@ NLTK_DATA=/tmp/nltk_data
 export NLTK_DATA
 
 # First install Python dependencies
-echo "Installing Python dependencies..."
-pip install --upgrade pip
-pip install -r requirements-streamlit.txt
+echo "Installing Python $PYTHON_VERSION and dependencies..."
+
+# Install Python 3.9 if not already installed
+if ! command -v python3.9 &> /dev/null; then
+    echo "Python 3.9 not found, installing..."
+    sudo apt-get update
+    sudo apt-get install -y python3.9 python3.9-venv
+fi
+
+# Create a virtual environment
+python3.9 -m venv venv
+source venv/bin/activate
+
+# Upgrade pip and install wheel
+pip install --upgrade pip wheel
+
+# Install only the required dependencies
+echo "Installing required packages..."
+pip install -r requirements.txt
 
 # Create a Python script for NLTK setup
 cat > setup_nltk.py << 'EOF'
@@ -54,10 +73,30 @@ EOF
 
 # Run the setup script
 echo "Running NLTK setup..."
-python setup_nltk.py
+python3.9 setup_nltk.py
 
 # Clean up
 rm -f setup_nltk.py
 
+# Create Streamlit config
+cat > ~/.streamlit/config.toml << EOF
+[server]
+port = 8501
+enableCORS = false
+enableXsrfProtection = false
+enableWebsocketCompression = false
+
+[browser]
+serverAddress = ""
+
+[runner]
+fixMatplotlib = false
+
+[theme]
+base = "light"
+EOF
+
 echo "\nSetup completed successfully!"
+echo "Python version: $(python3.9 --version)"
 echo "NLTK data is available at: $NLTK_DATA"
+echo "Streamlit configuration created at: ~/.streamlit/config.toml"
