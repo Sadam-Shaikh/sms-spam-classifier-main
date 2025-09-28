@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # Set NLTK data path
-nltk_data_path = os.path.join(os.path.expanduser('~'), 'nltk_data')
+nltk_data_path = os.getenv('NLTK_DATA', '/tmp/nltk_data')
 os.makedirs(nltk_data_path, exist_ok=True)
 nltk.data.path.append(nltk_data_path)
 
